@@ -1,6 +1,6 @@
 ﻿namespace Iberdrola_app
 {
-    partial class Form1
+    partial class FormMainMenu
     {
         /// <summary>
         ///  Required designer variable.
@@ -72,7 +72,7 @@
             this.btnBills.TabIndex = 3;
             this.btnBills.Text = "Facturación";
             this.btnBills.UseVisualStyleBackColor = true;
-            this.btnBills.Click += new System.EventHandler(this.button2_Click);
+            this.btnBills.Click += new System.EventHandler(this.btnBills_Click);
             // 
             // btnContracts
             // 
@@ -89,7 +89,7 @@
             this.btnContracts.TabIndex = 2;
             this.btnContracts.Text = "Contratos";
             this.btnContracts.UseVisualStyleBackColor = true;
-            this.btnContracts.Click += new System.EventHandler(this.button1_Click);
+            this.btnContracts.Click += new System.EventHandler(this.btnContracts_Click);
             // 
             // btnUsers
             // 
@@ -106,7 +106,7 @@
             this.btnUsers.TabIndex = 1;
             this.btnUsers.Text = "Usuarios";
             this.btnUsers.UseVisualStyleBackColor = true;
-            this.btnUsers.Click += new System.EventHandler(this.buttonUsers_Click);
+            this.btnUsers.Click += new System.EventHandler(this.btnUsers_Click);
             // 
             // panelLogo
             // 
@@ -178,7 +178,7 @@
             this.panelDesktopPanel.TabIndex = 2;
             this.panelDesktopPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.panelDesktopPanel_Paint);
             // 
-            // Form1
+            // FormMainMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -186,8 +186,8 @@
             this.Controls.Add(this.panelDesktopPanel);
             this.Controls.Add(this.panelTitleBar);
             this.Controls.Add(this.panelMenu);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "FormMainMenu";
+            this.Text = "FormMainMenu";
             this.panelMenu.ResumeLayout(false);
             this.panelLogo.ResumeLayout(false);
             this.panelLogo.PerformLayout();

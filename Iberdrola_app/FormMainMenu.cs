@@ -1,15 +1,16 @@
 namespace Iberdrola_app
 {
-    public partial class Form1 : Form
+    public partial class FormMainMenu : Form
     {
         private Button currentButton;
         private Random random;
         private int tempIndex;
         private Form ActiveForm;
-        public Form1()
+        public FormMainMenu()
         {
             InitializeComponent();
             random= new Random();   
+            /*btnCloseChildForm.Visible = false;*/
         }
 
         private Color SelectThemeColor()
@@ -37,6 +38,8 @@ namespace Iberdrola_app
                     currentButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
                     panelTitleBar.BackColor= color;
                     panelLogo.BackColor= ThemeColor.ChangeColorBrightness(color,-0.3); 
+                    ThemeColor.PrimaryColor= color;
+                    ThemeColor.SecondaryColor= ThemeColor.ChangeColorBrightness(color, -0.3); 
                 }
             }
         }
@@ -56,27 +59,41 @@ namespace Iberdrola_app
         
         private void OpenChildForm(Form childForm, object btnSender)
         {
+            if(ActiveForm!=null)
+            {
+                ActiveForm.Close();
+            }
+            ActiveButton(btnSender);
+            ActiveForm= childForm;
+            childForm.TopLevel = false;
+            childForm.FormBorderStyle= FormBorderStyle.None;
+            childForm.Dock = DockStyle.Fill;
+            this.panelDesktopPanel.Controls.Add(childForm);
+            this.panelDesktopPanel.Tag= childForm;
+            childForm.BringToFront();
+            childForm.Show();
+            lblTitle.Text=childForm.Text;
 
+        }
+
+        private void btnUsers_Click(object sender, EventArgs e)
+        {
+            OpenChildForm(new Forms.FormUsers(), sender);
+        }
+
+        private void btnBills_Click(object sender, EventArgs e)
+        {
+            OpenChildForm(new Forms.FormBills(), sender);
+        }
+
+        private void btnContracts_Click(object sender, EventArgs e)
+        {
+            OpenChildForm(new Forms.FormContracts(), sender);
         }
 
         private void panel2_Paint(object sender, PaintEventArgs e)
         {
 
-        }
-
-        private void buttonUsers_Click(object sender, EventArgs e)
-        {
-            ActiveButton(sender);
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            ActiveButton(sender);
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            ActiveButton(sender);
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
@@ -92,6 +109,23 @@ namespace Iberdrola_app
         private void label1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnCloseChild_Click(object sender, EventArgs e)
+        {
+            if (ActiveForm != null) 
+                ActiveForm.Close();
+            Reset();
+        }
+
+        private void Reset()
+        {
+            DisableButton();
+            lblTitle.Text = "Home";
+            panelTitleBar.BackColor= Color.FromArgb(0, 150, 136);
+            panelLogo.BackColor = Color.FromArgb(50, 61, 100);
+            currentButton = null;
+           /* btnCloseChildForm.Visble = false;*/
         }
 
         private void panelDesktopPanel_Paint(object sender, PaintEventArgs e)
