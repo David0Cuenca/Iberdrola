@@ -28,33 +28,35 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
+            this.GridUsers = new System.Windows.Forms.DataGridView();
+            ((System.ComponentModel.ISupportInitialize)(this.GridUsers)).BeginInit();
             this.SuspendLayout();
             // 
-            // label1
+            // GridUsers
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(354, 143);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(38, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "label1";
+            this.GridUsers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.GridUsers.Dock = System.Windows.Forms.DockStyle.Left;
+            this.GridUsers.Location = new System.Drawing.Point(0, 0);
+            this.GridUsers.Name = "GridUsers";
+            this.GridUsers.RowTemplate.Height = 25;
+            this.GridUsers.Size = new System.Drawing.Size(240, 450);
+            this.GridUsers.TabIndex = 0;
             // 
             // FormUsers
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.GridUsers);
             this.Name = "FormUsers";
             this.Text = "FormUsers";
+            ((System.ComponentModel.ISupportInitialize)(this.GridUsers)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private Label label1;
+        private DataGridView GridUsers;
     }
 }
