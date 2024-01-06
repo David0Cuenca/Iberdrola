@@ -2,7 +2,7 @@ namespace Iberdrola_app
 {
     public partial class FormMainMenu : Form
     {
-        private Button currentButton;
+        private Button? currentButton;
         private Random random;
         private int tempIndex;
         private Form ActiveForm;

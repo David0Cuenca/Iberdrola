@@ -5,17 +5,11 @@ namespace Iberdrola_app.Forms
 {
     public partial class FormUsers : Form
     {
-        private string connstring = "Host=localhost;Username=postgres;Password=123456;Database=Iberdrola";
-        private NpgsqlConnection conn;
 
         public FormUsers()
         {
             InitializeComponent();
-        }
-
-        private void FormUsers_Load(object sender, EventArgs e)
-        {
-            conn = new NpgsqlConnection(connstring);
+            MostrarUsuarios();
             LoadTheme();
         }
 
@@ -32,28 +26,71 @@ namespace Iberdrola_app.Forms
                     btn.FlatAppearance.BorderColor = ThemeColor.SecondaryColor;
                 }
             }
-            /*label1.ForeColor = ThemeColor.PrimaryColor;*/
-            /*label2.ForeColor = ThemeColor.SecondaryColor;*/
+            btnUpdate.BackColor = ThemeColor.PrimaryColor;
+            btnDelete.BackColor = ThemeColor.PrimaryColor;
         }
 
-/*        private async void ShowClients()
+        private void MostrarUsuarios()
         {
             try
             {
-                var clientesActivos = await conexion.ObtenerClientesActivosAsync();
-                GridUsers.AutoGenerateColumns = true;
-                GridUsers.DataSource = clientesActivos;
+                DataTable dataTable = ObtenerDatosConsulta("select * from cliente natural join cliente_activo");
 
-                foreach (DataGridViewColumn column in GridUsers.Columns)
+                if (dataTable.Rows.Count > 0)
                 {
-                    column.HeaderText = column.HeaderText.Replace("_", " ");
+                    GridUsers.DataSource = dataTable;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
+        }
 
-        }*/
+        private DataTable ObtenerDatosConsulta(string consulta)
+        {
+            DataTable dataTable = new DataTable();
+
+            using (NpgsqlConnection conn = new NpgsqlConnection("Server=localhost;Port=5432;Database=Iberdrola;User Id=postgres;Password=123456"))
+            {
+                conn.Open();
+
+                using (NpgsqlCommand comm = new NpgsqlCommand())
+                {
+                    comm.Connection = conn;
+                    comm.CommandType = CommandType.Text;
+                    comm.CommandText = consulta;
+
+                    using (NpgsqlDataReader dr = comm.ExecuteReader())
+                    {
+                        dataTable.Load(dr);
+                    }
+                }
+
+                conn.Close();
+            }
+
+            return dataTable;
+        }
+
+        private void GridUsers_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void btnInsert_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

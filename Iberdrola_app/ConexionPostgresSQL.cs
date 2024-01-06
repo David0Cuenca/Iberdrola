@@ -4,96 +4,71 @@ using System.Data;
 
 public class ConexionPostgresSQL
 {
-    private NpgsqlDataSource dataSource;
+    private NpgsqlConnection connection;
+    private string connectionString;
 
     public ConexionPostgresSQL()
     {
-        // Configuración de la conexión a la base de datos PostgreSQL
-        var connectionString = "Host=localhost;Username=postgres;Password=123456;Database=Iberdrola";
-        dataSource = NpgsqlDataSource.Create(connectionString);
+        // Configura la cadena de conexión a la base de datos
+        connectionString = "Host=localhost;Username=postgres;Password=123456;Database=Iberdrola";
+        connection = new NpgsqlConnection(connectionString);
     }
 
-    public async Task<DataTable> ObtenerUsuariosAsync()
+    public async Task OpenConnectionAsync()
     {
-        DataTable dataTable = new DataTable();
+        // Abre la conexión de manera asincrónica
+        await connection.OpenAsync();
+    }
+
+    public async Task CloseConnectionAsync()
+    {
+        // Cierra la conexión de manera asincrónica
+        await connection.CloseAsync();
+    }
+
+    public async Task InsertDataAsync(string someFieldData)
+    {
+        try
+        {
+            await OpenConnectionAsync();
+
+            // Inserta datos en la base de datos
+            using (var cmd = new NpgsqlCommand("INSERT INTO data (some_field) VALUES (@p)", connection))
+            {
+                cmd.Parameters.AddWithValue("p", someFieldData);
+                await cmd.ExecuteNonQueryAsync();
+            }
+        }
+        finally
+        {
+            await CloseConnectionAsync();
+        }
+    }
+
+    public async Task<IEnumerable<string>> ObtenerTodosLosUsuariosAsync()
+    {
+        List<string> usuarios = new List<string>();
 
         try
         {
-            await using var connection = await dataSource.OpenConnectionAsync();
-            using var command = connection.CreateCommand();
-            command.CommandText = "SELECT * FROM Cliente";
-            await using var reader = await command.ExecuteReaderAsync();
-            dataTable.Load(reader);
+            await OpenConnectionAsync();
+
+            // Recupera todos los usuarios de la base de datos
+            using (var cmd = new NpgsqlCommand("SELECT * FROM Cliente", connection))
+            using (var reader = await cmd.ExecuteReaderAsync())
+            {
+                while (await reader.ReadAsync())
+                {
+                    usuarios.Add(reader.GetString(0)); // Ajusta esto según la estructura de tu tabla
+                }
+            }
         }
-        catch (Exception ex)
+        finally
         {
-            // Manejo de excepciones
-            Console.WriteLine(ex.Message);
+            await CloseConnectionAsync();
         }
 
-        return dataTable;
+        return usuarios;
     }
 
-    public async Task<DataTable> ObtenerClientesActivosAsync()
-    {
-        DataTable dataTable = new DataTable();
-
-        try
-        {
-            await using var connection = await dataSource.OpenConnectionAsync();
-            using var command = connection.CreateCommand();
-            command.CommandText = "SELECT * FROM Cliente_Activo";
-            await using var reader = await command.ExecuteReaderAsync();
-            dataTable.Load(reader);
-        }
-        catch (Exception ex)
-        {
-            // Manejo de excepciones
-            Console.WriteLine(ex.Message);
-        }
-
-        return dataTable;
-    }
-
-    public async Task<DataTable> ObtenerContratosAsync()
-    {
-        DataTable dataTable = new DataTable();
-
-        try
-        {
-            await using var connection = await dataSource.OpenConnectionAsync();
-            using var command = connection.CreateCommand();
-            command.CommandText = "SELECT * FROM Contrato";
-            await using var reader = await command.ExecuteReaderAsync();
-            dataTable.Load(reader);
-        }
-        catch (Exception ex)
-        {
-            // Manejo de excepciones
-            Console.WriteLine(ex.Message);
-        }
-
-        return dataTable;
-    }
-
-    public async Task<DataTable> ObtenerFacturasAsync()
-    {
-        DataTable dataTable = new DataTable();
-
-        try
-        {
-            await using var connection = await dataSource.OpenConnectionAsync();
-            using var command = connection.CreateCommand();
-            command.CommandText = "SELECT * FROM Facturas";
-            await using var reader = await command.ExecuteReaderAsync();
-            dataTable.Load(reader);
-        }
-        catch (Exception ex)
-        {
-            // Manejo de excepciones
-            Console.WriteLine(ex.Message);
-        }
-
-        return dataTable;
-    }
 }
