@@ -32,8 +32,6 @@ namespace Iberdrola_app.Forms
                     btn.FlatAppearance.BorderColor = ThemeColor.SecondaryColor;
                 }
             }
-            btnUpdate.BackColor = ThemeColor.PrimaryColor;
-            btnDelete.BackColor = ThemeColor.PrimaryColor;
         }
 
         private void MostrarUsuarios()
