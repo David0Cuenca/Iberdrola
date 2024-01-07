@@ -10,7 +10,7 @@ namespace Iberdrola_app.Forms
     {
         NpgsqlConnection conn = new NpgsqlConnection("Server=localhost;Port=5432;Database=Iberdrola;User Id=postgres;Password=123456");
         private NpgsqlCommand cmd;
-
+        private string OldDni;
         public FormUsers()
         {
             InitializeComponent();
@@ -105,14 +105,14 @@ namespace Iberdrola_app.Forms
             textDni.Text =string.Empty;
             textName.Text =string.Empty;
             textLastName.Text =string.Empty;
-            textAdress.Text =string.Empty;
+            textAddres.Text =string.Empty;
             dateTimePicker1.Value=DateTime.Today;
         }
 
         private void btnInsert_Click(object sender, EventArgs e)
         {
 
-            if (textName.Text != "" && textLastName.Text != "" && textAdress.Text != "" && textDni.Text != "")
+            if (textName.Text != "" && textLastName.Text != "" && textAddres.Text != "" && textDni.Text != "")
             {
                 if (VerifyDni(textDni.Text))
                 {
@@ -131,7 +131,8 @@ namespace Iberdrola_app.Forms
 
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-            if (textName.Text != "" && textLastName.Text != "" && textAdress.Text != "" && textDni.Text != "")
+
+            if (textName.Text != "" && textLastName.Text != "" && textAddres.Text != "" && textDni.Text != "")
             {
                 if (VerifyDni(textDni.Text))
                 {
@@ -150,16 +151,18 @@ namespace Iberdrola_app.Forms
 
         private void UpdateUser()
         {
+
                 conn.Open();
                 cmd = new NpgsqlCommand("UPDATE cliente " +
                 "SET dni =@dni, nombre =@name, nacimiento=@birth, domicilio =@adress, apellidos=@lastname " +
-                "WHERE dni=@dni; ", conn);
+                "WHERE dni=@olddni; ", conn);
 
                 cmd.Parameters.AddWithValue("@dni", textDni.Text);
                 cmd.Parameters.AddWithValue("@name", textName.Text);
                 cmd.Parameters.AddWithValue("@lastname", textLastName.Text);
                 cmd.Parameters.AddWithValue("@birth", DateTime.Parse(dateTimePicker1.Text));
-                cmd.Parameters.AddWithValue("@adress", textDni.Text);
+                cmd.Parameters.AddWithValue("@adress", textAddres.Text);
+            cmd.Parameters.AddWithValue("@olddni", OldDni);
                 cmd.ExecuteNonQuery();
                 conn.Close();
                 MessageBox.Show("Los datos han sido introducidos de forma correcta");
@@ -219,10 +222,11 @@ namespace Iberdrola_app.Forms
 
         private void GridUsers_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
+            OldDni = textDni.Text = GridUsers.Rows[e.RowIndex].Cells[0].Value.ToString();
             textDni.Text = GridUsers.Rows[e.RowIndex].Cells[0].Value.ToString();
             textName.Text = GridUsers.Rows[e.RowIndex].Cells[1].Value.ToString();
             dateTimePicker1.Value = (DateTime)GridUsers.Rows[e.RowIndex].Cells[2].Value;
-            textAdress.Text = GridUsers.Rows[e.RowIndex].Cells[3].Value.ToString();
+            textAddres.Text = GridUsers.Rows[e.RowIndex].Cells[3].Value.ToString();
             textLastName.Text = GridUsers.Rows[e.RowIndex].Cells[4].Value.ToString();
         }
     }

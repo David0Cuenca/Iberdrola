@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.GridUsers = new System.Windows.Forms.DataGridView();
             this.btnInsert = new System.Windows.Forms.Button();
             this.btnUpdate = new System.Windows.Forms.Button();
@@ -41,7 +41,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textDni = new System.Windows.Forms.TextBox();
             this.lblDni = new System.Windows.Forms.Label();
-            this.textAdress = new System.Windows.Forms.TextBox();
+            this.textAddres = new System.Windows.Forms.TextBox();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.lblData = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -53,20 +53,20 @@
             // 
             this.GridUsers.AllowUserToAddRows = false;
             this.GridUsers.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.GridUsers.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.GridUsers.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
             this.GridUsers.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.GridUsers.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.GridUsers.BackgroundColor = System.Drawing.Color.White;
             this.GridUsers.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.GridUsers.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.GridUsers.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.GridUsers.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.GridUsers.GridColor = System.Drawing.Color.White;
             this.GridUsers.Location = new System.Drawing.Point(20, 475);
@@ -200,13 +200,13 @@
             this.lblDni.Text = "DNI";
             this.lblDni.Click += new System.EventHandler(this.lblDni_Click);
             // 
-            // textAdress
+            // textAddres
             // 
-            this.textAdress.Location = new System.Drawing.Point(227, 195);
-            this.textAdress.Name = "textAdress";
-            this.textAdress.Size = new System.Drawing.Size(337, 23);
-            this.textAdress.TabIndex = 11;
-            this.textAdress.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
+            this.textAddres.Location = new System.Drawing.Point(227, 195);
+            this.textAddres.Name = "textAddres";
+            this.textAddres.Size = new System.Drawing.Size(337, 23);
+            this.textAddres.TabIndex = 11;
+            this.textAddres.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // dateTimePicker1
             // 
@@ -233,7 +233,7 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.textAdress);
+            this.panel1.Controls.Add(this.textAddres);
             this.panel1.Controls.Add(this.lblData);
             this.panel1.Controls.Add(this.textName);
             this.panel1.Controls.Add(this.dateTimePicker1);
@@ -286,7 +286,7 @@
         private Label label1;
         private TextBox textDni;
         private Label lblDni;
-        private TextBox textAdress;
+        private TextBox textAddres;
         private DateTimePicker dateTimePicker1;
         private Label lblData;
         private Panel panel1;
