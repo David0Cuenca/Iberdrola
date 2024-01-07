@@ -1,16 +1,20 @@
 ﻿using Npgsql;
+using System.Collections.Generic;
 using System.Data;
+using System.Net;
+using System.Text.RegularExpressions;
 
 namespace Iberdrola_app.Forms
 {
     public partial class FormUsers : Form
     {
+        NpgsqlConnection conn = new NpgsqlConnection("Server=localhost;Port=5432;Database=Iberdrola;User Id=postgres;Password=123456");
+        private NpgsqlCommand cmd;
 
         public FormUsers()
         {
             InitializeComponent();
             MostrarUsuarios();
-            LoadTheme();
         }
 
         private void LoadTheme()
@@ -50,10 +54,9 @@ namespace Iberdrola_app.Forms
         private DataTable ObtenerDatosConsulta(string consulta)
         {
             DataTable dataTable = new DataTable();
-
-            using (NpgsqlConnection conn = new NpgsqlConnection("Server=localhost;Port=5432;Database=Iberdrola;User Id=postgres;Password=123456"))
+            conn.Open();
             {
-                conn.Open();
+                
 
                 using (NpgsqlCommand comm = new NpgsqlCommand())
                 {
@@ -73,24 +76,154 @@ namespace Iberdrola_app.Forms
             return dataTable;
         }
 
-        private void GridUsers_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void AddUser()
         {
+           conn.Open();
+           cmd = new NpgsqlCommand("INSERT INTO Cliente (DNI, Nombre, Apellidos, Nacimiento, Domicilio) VALUES (@dni,@name,@lastname,@birth,@adress)", conn);
+           
+           cmd.Parameters.AddWithValue("@dni", textDni.Text);
+           cmd.Parameters.AddWithValue("@name", textName.Text);
+           cmd.Parameters.AddWithValue("@lastname", textLastName.Text);
+           cmd.Parameters.AddWithValue("@birth", DateTime.Parse(dateTimePicker1.Text));
+           cmd.Parameters.AddWithValue("@adress", textDni.Text);
+           cmd.ExecuteNonQuery();
+           conn.Close();
+           MessageBox.Show("Los datos han sido introducidos de forma correcta");
+           MostrarUsuarios();
+           ClearControls();   
+        }
 
+
+        private bool VerifyDni(string dni)
+        {
+            string patronDni = @"^\d{8}[A-HJ-NP-TV-Z]$";
+            return Regex.IsMatch(dni, patronDni, RegexOptions.IgnoreCase);
+        }
+
+        private void ClearControls()
+        {
+            textDni.Text =string.Empty;
+            textName.Text =string.Empty;
+            textLastName.Text =string.Empty;
+            textAdress.Text =string.Empty;
+            dateTimePicker1.Value=DateTime.Today;
         }
 
         private void btnInsert_Click(object sender, EventArgs e)
         {
 
+            if (textName.Text != "" && textLastName.Text != "" && textAdress.Text != "" && textDni.Text != "")
+            {
+                if (VerifyDni(textDni.Text))
+                {
+                    AddUser();
+                }
+                else
+                {
+                    MessageBox.Show("!El DNI no es valido¡");
+                }
+            }
+            else
+            {
+                MessageBox.Show("!Introduzca todos los datos requeridos¡");
+            }
         }
 
         private void btnUpdate_Click(object sender, EventArgs e)
         {
+            if (textName.Text != "" && textLastName.Text != "" && textAdress.Text != "" && textDni.Text != "")
+            {
+                if (VerifyDni(textDni.Text))
+                {
+                    UpdateUser();
+                }
+                else
+                {
+                    MessageBox.Show("!El DNI no es valido¡");
+                }
+            }
+            else
+            {
+                MessageBox.Show("!Introduzca todos los datos requeridos¡");
+            }
+        }
 
+        private void UpdateUser()
+        {
+                conn.Open();
+                cmd = new NpgsqlCommand("UPDATE cliente " +
+                "SET dni =@dni, nombre =@name, nacimiento=@birth, domicilio =@adress, apellidos=@lastname " +
+                "WHERE dni=@dni; ", conn);
+
+                cmd.Parameters.AddWithValue("@dni", textDni.Text);
+                cmd.Parameters.AddWithValue("@name", textName.Text);
+                cmd.Parameters.AddWithValue("@lastname", textLastName.Text);
+                cmd.Parameters.AddWithValue("@birth", DateTime.Parse(dateTimePicker1.Text));
+                cmd.Parameters.AddWithValue("@adress", textDni.Text);
+                cmd.ExecuteNonQuery();
+                conn.Close();
+                MessageBox.Show("Los datos han sido introducidos de forma correcta");
+                MostrarUsuarios();
+                ClearControls();
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblDni_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged_2(object sender, EventArgs e)
+        {
+
+        }
+
+        private void FormUsers_Load(object sender, EventArgs e)
+        {
+            LoadTheme();
+        }
+
+        private void GridUsers_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            textDni.Text = GridUsers.Rows[e.RowIndex].Cells[0].Value.ToString();
+            textName.Text = GridUsers.Rows[e.RowIndex].Cells[1].Value.ToString();
+            dateTimePicker1.Value = (DateTime)GridUsers.Rows[e.RowIndex].Cells[2].Value;
+            textAdress.Text = GridUsers.Rows[e.RowIndex].Cells[3].Value.ToString();
+            textLastName.Text = GridUsers.Rows[e.RowIndex].Cells[4].Value.ToString();
         }
     }
 }
