@@ -20,10 +20,8 @@ namespace Iberdrola_app.Forms
         public FormContracts()
         {
             InitializeComponent();
-            checkTarifa.SetItemChecked(0, true);
-        }
 
-        
+        }
 
         private void SearchDni(string dni)
         {
@@ -43,13 +41,11 @@ namespace Iberdrola_app.Forms
 
                 if (dataTable.Rows.Count > 0)
                 {
-                    // Asigna el resultado al DataGridView o cualquier otro control que estés utilizando
                     GridContracts.DataSource = dataTable;
                 }
                 else
                 {
                     MessageBox.Show("No hay contratos para el DNI proporcionado.");
-                    // Puedes limpiar el contenido del DataGridView o realizar otras acciones según tus necesidades.
                 }
             }
             catch (Exception ex)
@@ -85,13 +81,91 @@ namespace Iberdrola_app.Forms
         private void ClearControls()
         {
             textDni.Text = string.Empty;
-            textCont.Text = string.Empty;
+            textSearchDni.Text = string.Empty;
+            textContActivity.Text = string.Empty;
+            textContModel.Text = string.Empty;
             
         }
         private void AddContract()
         {
-            throw new NotImplementedException();
+            try
+            {
+                int tarifa = (checkTarifa.GetItemChecked(0)) ? 14 : 16;
+
+                conn.Open();
+                int nuevoContador = NewCont();
+                cmd = new NpgsqlCommand("INSERT INTO Contrato (DNI_Cliente, id_cont, id_tarifa) VALUES (@dni, @contador, @tarifa)", conn);
+                cmd.Parameters.AddWithValue("@dni", textDni.Text);
+                cmd.Parameters.AddWithValue("@contador", nuevoContador);
+                cmd.Parameters.AddWithValue("@tarifa", tarifa);
+
+                cmd.ExecuteNonQuery();
+                MessageBox.Show("Contrato agregado con éxito.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al agregar el contrato: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                conn.Close();
+                ClearControls();
+            }
         }
+        private void DeleteContract()
+        {
+                try
+                {
+                    if (GridContracts.SelectedRows.Count > 0)
+                    {
+                        int idContrato = Convert.ToInt32(GridContracts.SelectedRows[0].Cells["id_contrato"].Value);
+
+                        conn.Open();
+                        cmd = new NpgsqlCommand("DELETE FROM contrato WHERE id_contrato = @id_contract;", conn);
+                        cmd.Parameters.AddWithValue("@id_contract", idContrato);
+
+                        cmd.ExecuteNonQuery();
+                        MessageBox.Show("Contrato eliminado con éxito.");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Seleccione un contrato para eliminar.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al eliminar el contrato: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    conn.Close();
+                    ClearControls();
+                }
+            }
+
+
+        private int NewCont()
+        {
+            try
+            {
+                cmd = new NpgsqlCommand("INSERT INTO contador (modelo, actividad) VALUES (@model, @activity) RETURNING id_cont;", conn);
+                cmd.Parameters.AddWithValue("@model", textContModel.Text);
+                cmd.Parameters.AddWithValue("@activity", textContActivity.Text);
+
+                // Ejecutar la consulta y obtener el valor generado para id_cont
+                int nuevoContador = Convert.ToInt32(cmd.ExecuteScalar());
+
+                return nuevoContador;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al obtener el nuevo contador: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return -1;
+            }
+        }
+
+
+
         private void btnDelete_Click(object sender, EventArgs e)
         {
 
@@ -106,17 +180,26 @@ namespace Iberdrola_app.Forms
         {
             if (!string.IsNullOrEmpty(textSearchDni.Text))
             {
-                SearchDni(textSearchDni.Text);
+                if (VerifyDni(textSearchDni.Text))
+                {
+                    SearchDni(textSearchDni.Text);
+                }
+                else
+                {
+                    MessageBox.Show("El Formato del dni es incorrecto");
+                }
+                
             }
             else
             {
-                MessageBox.Show("Ingrese un DNI válido para mostrar los contratos.");
+                MessageBox.Show("El campo DNI esta vacio para su busqueda");
             }
         }
 
         private void FormContracts_Load(object sender, EventArgs e)
         {
             LoadTheme();
+            checkTarifa.SetItemChecked(0, true);
         }
 
         private void lblSearchDni_Click(object sender, EventArgs e)
@@ -127,7 +210,7 @@ namespace Iberdrola_app.Forms
         private void btnCreate_Click(object sender, EventArgs e)
         {
 
-            if (textDni.Text != "" && textCont.Text != "")
+            if (textDni.Text != "" && textContModel.Text != "" && textContActivity.Text != "")
             {
                 if (VerifyDni(textDni.Text))
                 {
@@ -165,6 +248,40 @@ namespace Iberdrola_app.Forms
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void checkTarifa_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (e.NewValue == CheckState.Checked)
+            {
+                for (int i = 0; i < checkTarifa.Items.Count; i++)
+                {
+                    if (i != e.Index)
+                    {
+                        checkTarifa.SetItemChecked(i, false);
+                    }
+                }
+            }
+        }
+
+        private void label1_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click_2(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void GridContracts_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            textDni.Text = GridContracts.Rows[e.RowIndex].Cells[0].Value.ToString();
         }
     }
 }
