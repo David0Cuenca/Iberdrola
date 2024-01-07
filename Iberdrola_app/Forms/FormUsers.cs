@@ -1,8 +1,10 @@
 ﻿using Npgsql;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Net;
 using System.Text.RegularExpressions;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace Iberdrola_app.Forms
 {
@@ -93,6 +95,37 @@ namespace Iberdrola_app.Forms
            ClearControls();   
         }
 
+        private void UpdateUser()
+        {
+
+            conn.Open();
+            cmd = new NpgsqlCommand("UPDATE cliente " +
+            "SET dni =@dni, nombre =@name, nacimiento=@birth, domicilio =@adress, apellidos=@lastname " +
+            "WHERE dni=@olddni; ", conn);
+
+            cmd.Parameters.AddWithValue("@dni", textDni.Text);
+            cmd.Parameters.AddWithValue("@name", textName.Text);
+            cmd.Parameters.AddWithValue("@lastname", textLastName.Text);
+            cmd.Parameters.AddWithValue("@birth", DateTime.Parse(dateTimePicker1.Text));
+            cmd.Parameters.AddWithValue("@adress", textAddres.Text);
+            cmd.Parameters.AddWithValue("@olddni", OldDni);
+            cmd.ExecuteNonQuery();
+            conn.Close();
+            MessageBox.Show("Los datos han sido introducidos de forma correcta");
+            MostrarUsuarios();
+            ClearControls();
+        }
+        private void DeleteUser()
+        {
+            conn.Open();
+            cmd = new NpgsqlCommand("DELETE FROM cliente_activo WHERE dni=@dni", conn);
+            cmd.Parameters.AddWithValue("@dni", textDni.Text);
+            cmd.ExecuteNonQuery();
+            conn.Close();
+            MessageBox.Show("El usuario a sido eliminado");
+            MostrarUsuarios();
+            ClearControls();
+        }
 
         private bool VerifyDni(string dni)
         {
@@ -108,6 +141,7 @@ namespace Iberdrola_app.Forms
             textAddres.Text =string.Empty;
             dateTimePicker1.Value=DateTime.Today;
         }
+
 
         private void btnInsert_Click(object sender, EventArgs e)
         {
@@ -149,31 +183,19 @@ namespace Iberdrola_app.Forms
             }
         }
 
-        private void UpdateUser()
-        {
-
-                conn.Open();
-                cmd = new NpgsqlCommand("UPDATE cliente " +
-                "SET dni =@dni, nombre =@name, nacimiento=@birth, domicilio =@adress, apellidos=@lastname " +
-                "WHERE dni=@olddni; ", conn);
-
-                cmd.Parameters.AddWithValue("@dni", textDni.Text);
-                cmd.Parameters.AddWithValue("@name", textName.Text);
-                cmd.Parameters.AddWithValue("@lastname", textLastName.Text);
-                cmd.Parameters.AddWithValue("@birth", DateTime.Parse(dateTimePicker1.Text));
-                cmd.Parameters.AddWithValue("@adress", textAddres.Text);
-            cmd.Parameters.AddWithValue("@olddni", OldDni);
-                cmd.ExecuteNonQuery();
-                conn.Close();
-                MessageBox.Show("Los datos han sido introducidos de forma correcta");
-                MostrarUsuarios();
-                ClearControls();
-        }
-
         private void btnDelete_Click(object sender, EventArgs e)
         {
-
+            if (textDni.Text != "")
+            {
+                DeleteUser();
+            }
+            else
+            {
+                MessageBox.Show("Seleciona un usuario para eliminar");
+            }
         }
+
+
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
